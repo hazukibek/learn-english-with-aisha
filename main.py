@@ -29,7 +29,7 @@ def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
     yes = types.KeyboardButton("Хорошо")
     markup.add(yes)
-    bot.reply_to(message,f'Добро пожаловать, {username}. Перед работой с данным ботом, Вы должны ответить на несколько вопросов.',reply_markup=markup)
+    bot.reply_to(message, f'Добро пожаловать, {username}. Перед работой с данным ботом, Вы должны ответить на несколько вопросов.', reply_markup=markup)
 
     db_object.execute(f"SELECT id FROM users WHERE id = {user_id}")
     result = db_object.fetchone()
