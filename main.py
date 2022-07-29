@@ -29,7 +29,7 @@ def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
     yes = types.KeyboardButton("Хорошо")
     markup.add(yes)
-    bot.reply_to(message,f'Добро пожаловать, {username}. Перед работой с данным ботом, Вы должны ответить на несколько вопросов.',reply_markup=markup)
+    bot.reply_to(message, f'Добро пожаловать, {username}. Перед работой с данным ботом, Вы должны ответить на несколько вопросов.', reply_markup=markup)
 
     db_object.execute(f"SELECT id FROM users WHERE id = {user_id}")
     result = db_object.fetchone()
@@ -39,6 +39,20 @@ def start(message):
         db_connection.commit()
 
     update_messages_count(user_id)
+
+
+@server.route(f"/{BOT_TOKEN}", methods=["POST"])
+def redirect_message():
+    json_string = request.get_data().decode("utf-8")
+    update = telebot.types.Update.de_json(json_string)
+    bot.process_new_updates([update])
+    return "!", 200
+
+
+if __name__ == "__main__":
+    bot.remove_webhook()
+    bot.set_webhook(url=APP_URL)
+    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 
 @bot.message_handler(content_types=['text'])
@@ -156,17 +170,3 @@ def user_text(message):
 @bot.message_handler(commands=['info'])
 def info(message):
     bot.send_message(message.chat.id, 'Этот бот аспротльдб')
-
-
-@server.route(f"/{BOT_TOKEN}", methods=["POST"])
-def redirect_message():
-    json_string = request.get_data().decode("utf-8")
-    update = telebot.types.Update.de_json(json_string)
-    bot.process_new_updates([update])
-    return "!", 200
-
-
-if __name__ == "__main__":
-    bot.remove_webhook()
-    bot.set_webhook(url=APP_URL)
-    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
