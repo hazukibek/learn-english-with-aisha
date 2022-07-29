@@ -23,9 +23,13 @@ def update_messages_count(user_id):
 
 @bot.message_handler(commands=['start'])
 def start(message):
+    global user_id
     user_id = message.from_user.id
     username = message.from_user.username
-    bot.reply_to(message, f'Hello, {username}')
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+    yes = types.KeyboardButton("Хорошо")
+    markup.add(yes)
+    bot.reply_to(message,f'Добро пожаловать, {username}. Перед работой с данным ботом, Вы должны ответить на несколько вопросов.',reply_markup=markup)
 
     db_object.execute(f"SELECT id FROM users WHERE id = {user_id}")
     result = db_object.fetchone()
